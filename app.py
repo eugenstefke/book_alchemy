@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request
+from email import message
+
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
 from data_models import db, Author, Book
@@ -58,7 +60,7 @@ def home():
   search = request.args.get("title")
   sort_by = request.args.get("sort_by", "title")
   direction = request.args.get("direction", "asc")
-
+  message = request.args.get("message")
 
   if sort_by == "author":
     query = Book.query.join(Author)
@@ -79,7 +81,30 @@ def home():
       message = f"No books found!"
       return render_template('home.html', message=message)
 
-  return render_template('home.html', books=books, sort_by=sort_by, direction=direction, authors=authors)
+  return render_template('home.html', books=books, sort_by=sort_by, direction=direction, authors=authors, message=message)
+
+@app.route("/book/<int:book_id>/delete", methods=['POST'])
+def delete_book(book_id):
+  book = Book.query.filter_by(id=book_id).first()
+
+  if book is None:
+    return redirect(url_for('home', message="Book not found!"))
+
+  title = book.title # save title for message
+  author_id = book.author_id  # note author_id befor delete book
+
+  db.session.delete(book)
+  db.session.commit()
+
+  # Check if no more books have the same author_id
+  remaining_books = Book.query.filter_by(author_id=author_id).all()
+
+  if not remaining_books:
+    db.session.delete(Author.query.get(author_id))
+    db.session.commit()
+
+  message = f"Book '{title}' was deleted successfully!"
+  return redirect(url_for('home', message=message))
 
 if __name__ == "__main__":
     # host="0.0.0.0" macht die App auch außerhalb von localhost erreichbar (z. B. in Codio)

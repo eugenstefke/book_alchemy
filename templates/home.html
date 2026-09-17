@@ -1,42 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Meine Bibliothek</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
   <body>
+
+    <div class="book-grid">
     {% for book in books %}
         {% for author in authors if book.author_id == author.id %}
-        <div><img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover von {{ book.title }}">
-        <h3>"{{ book.title }} write by {{ author.name }} </h3>
-        </div>
+            <div class="book-card">
+            <div class="cover-wrapper">
+                <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover von {{ book.title }}">
+                <form action="/book/{{ book.id }}/delete" method="POST">
+                <button type="submit" class="delete-icon" title="Delete Book">🗑️</button>
+                </form>
+            </div>
+            <h3>"{{ book.title }} write by {{ author.name }} </h3>
+            </div>
         {% endfor %}
     {% endfor %}
+  </div>
 
-  <form action="/" method="GET">
-  <label for="sort_by">Sort by:</label>
-  <select id="sort_by" name="sort_by">
-  <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Book title</option>
-  <option value="author" {% if sort_by == 'author' %}selected{% endif %}>Author</option>
+  <div class="controls">
+    <form action="/" method="GET">
+        <label for="sort_by">Sort by:</label>
+        <select id="sort_by" name="sort_by">
+            <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Book title</option>
+            <option value="author" {% if sort_by == 'author' %}selected{% endif %}>Author</option>
   </select>
 
-  <label for="direction">Direction:</label>
-  <select id="direction" name="direction">
-  <option value="asc" {% if direction == 'asc' %}selected{% endif %}>Ascending</option>
-  <option value="desc" {% if direction == 'desc' %}selected{% endif %}>Descending</option>
-  </select>
+        <label for="direction">Direction:</label>
+        <select id="direction" name="direction">
+            <option value="asc" {% if direction == 'asc' %}selected{% endif %}>Ascending</option>
+            <option value="desc" {% if direction == 'desc' %}selected{% endif %}>Descending</option>
+        </select>
 
-  <button type="submit">Sortieren</button>
-  </form>
+            <button type="submit">Sortieren</button>
+    </form>
 
-  <form action="/" method="GET">
-  <label for="title">Search by book title:</label>
-  <input type="text" id="title" name="title" required><br><br> <input type="submit" value="Search">
-  </form>
+    <form action="/" method="GET">
+        <label for="title">Search by book title:</label>
+        <input type="text" id="title" name="title" required><br><br> <input type="submit" value="Search">
+    </form>
+  </div>
 
   {% if message %}
-  <p>{{ message }}</p>
+  <p class="message">{{ message }}</p>
   {% endif %}
   </body>
 </html>

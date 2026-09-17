@@ -4,34 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add Book</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
+    <div class="form-page">
+      <div class="form-card">
+        <h1>Neues Buch hinzufügen</h1>
 
-  <form action="/add_book" method="POST">
-  <label for="title">Book Title:</label>
-    <input type="text" id="title" name="title" required><br><br>
+        <form action="/add_book" method="POST">
+          <div class="field">
+            <label for="title">Book Title:</label>
+            <input type="text" id="title" name="title" required>
+          </div>
 
-    <label for="publication_year">Publication year:</label>
-    <input type="text" id="publication_year" name="publication_year" required><br><br>
+          <div class="field">
+            <label for="publication_year">Publication year:</label>
+            <input type="text" id="publication_year" name="publication_year" required>
+          </div>
 
-    <label for="isbn">ISBN number:</label>
-  <input type="text" id="isbn" name="isbn"><br><br>
+          <div class="field">
+            <label for="isbn">ISBN number:</label>
+            <input type="text" id="isbn" name="isbn">
+          </div>
 
-    <label for="author_id">Author:</label>
-    <select id="author_id" name="author_id" required>
-      {% for author in authors %}
-        <option value="{{ author.id }}">{{ author.name }}</option>
-      {% endfor %}
-    </select><br><br>
+          <div class="field">
+            <label for="author_id">Author:</label>
+            <select id="author_id" name="author_id" required>
+              {% for author in authors %}
+                <option value="{{ author.id }}">{{ author.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
 
-  <input type="submit" value="Add Book">
-  </form>
-    {% if message %}
-    <p>{{ message }}</p>
-    {% endif %}
+          <input type="submit" value="Add Book">
+        </form>
 
+        {% if message %}
+          <p class="message">{{ message }}</p>
+        {% endif %}
+
+        <a href="/" class="back-link">← Zurück zur Startseite</a>
+      </div>
+    </div>
   </body>
 </html>
-
-
-
