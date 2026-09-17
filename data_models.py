@@ -4,7 +4,13 @@ from sqlalchemy.orm import foreign
 db = SQLAlchemy()
 
 class Author(db.Model):
+    """
+    Represents an ‘authors’ table with the following columns:
+    id (primary key), the author’s name as ‘name’, the author’s date of birth as ‘birth_data’
+    and the date of death of a deceased author as ‘data_of_death’.
 
+   he class can be printed out itself
+    """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
     birth_date = db.Column(db.String)
@@ -18,7 +24,12 @@ class Author(db.Model):
 
 
 class Book(db.Model):
+    """
+    Represents a ‘books’ table with the following columns:
+    id (primary key), ISBN number, book title, year of publication and author id (foreign key).
 
+    The class can be printed out itself
+    """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     isbn = db.Column(db.String)
     title = db.Column(db.String, nullable=False)

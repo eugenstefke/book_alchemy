@@ -1,7 +1,4 @@
-from email import message
-
-from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, redirect, url_for
 import os
 from data_models import db, Author, Book
 
@@ -17,6 +14,10 @@ with app.app_context():
 
 @app.route("/add_author", methods=['GET', 'POST'])
 def add_author():
+  """
+  Provides the user with a website that allows them to add an author to the table.
+  Adds a new author to the authors’ table
+  """
   message = None
 
   if request.method == 'POST':
@@ -35,7 +36,10 @@ def add_author():
 
 @app.route("/add_book", methods=['GET', 'POST'])
 def add_book():
-
+  """
+  Provides the user with a website that allows them to add a book to the table.
+  Adds a new book to the book table
+  """
   message = None
 
   if request.method == 'POST':
@@ -49,14 +53,16 @@ def add_book():
     db.session.add(new_book)
     db.session.commit()
 
-
     message = f"Book'{title}' add successfully!"
   authors = Author.query.all()
   return render_template('add_book.html', message=message, authors=authors)
 
 @app.route("/", methods=['GET'])
 def home():
-
+  """
+  Displays the home page to the user, showing their book collection from the book table.
+  Allow the user to search for a book title and to sort by book title or author name (in descending or ascending order).
+  """
   search = request.args.get("title")
   sort_by = request.args.get("sort_by", "title")
   direction = request.args.get("direction", "asc")
@@ -85,6 +91,14 @@ def home():
 
 @app.route("/book/<int:book_id>/delete", methods=['POST'])
 def delete_book(book_id):
+
+  """
+  Deletes a book from the books table when the user clicks the ‘Delete’ button on the website.
+
+  Records the author ID of the deleted book.
+  It then scans the books table; if an author’s ID no longer appears there,
+  the function also deletes the author from the authors table.
+  """
   book = Book.query.filter_by(id=book_id).first()
 
   if book is None:
