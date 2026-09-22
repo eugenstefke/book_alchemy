@@ -79,7 +79,7 @@ def add_book():
       db.session.rollback()
       message = f"Error: {e}"
 
-    return render_template('add_book.html', message=message, authors=authors)
+  return render_template('add_book.html', message=message, authors=authors)
 
 @app.route("/", methods=['GET'])
 def home():
